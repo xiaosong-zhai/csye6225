@@ -10,15 +10,15 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install MySQL 8.0.33
         run: |
-          apt-get update
-          apt-get install -y mysql-server-8.0.33
-          service mysql start
-          mysql -u root -e "CREATE USER 'root'@'%' IDENTIFIED BY 'zxs123123';"
-          mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';"
-          mysql -u root -e "FLUSH PRIVILEGES;"
+          sudo apt-get update
+          sudo apt-get install -y mysql-server-8.0.33
+          sudo service mysql start
+          sudo mysql -u root -e "CREATE USER 'root'@'%' IDENTIFIED BY 'zxs123123';"
+          sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';"
+          sudo mysql -u root -e "FLUSH PRIVILEGES;"
       - name: Test MySQL connection
         run: |
-          mysqladmin -u root --password=zxs123123 status
+          sudo mysqladmin -u root --password=zxs123123 status
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
