@@ -5,23 +5,20 @@ on: [pull_request]
 jobs:
   build-and-health-check:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: zx123123
-        ports:
-          - 3306:3306
-          # Before continuing, verify the mysql container is reachable from the ubuntu host
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - uses: actions/checkout@v3
-      - name: Wait for MySQL
+      - name: Install MySQL 8.0.33
         run: |
-          wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-          chmod +x wait-for-it.sh
-          ./wait-for-it.sh mysql:3306 --timeout=60
+          apt-get update
+          apt-get install -y mysql-server-8.0.33
+          service mysql start
+          mysql -u root -e "CREATE USER 'root'@'%' IDENTIFIED BY 'zxs123123';"
+          mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';"
+          mysql -u root -e "FLUSH PRIVILEGES;"
+      - name: Test MySQL connection
+        run: |
+          mysqladmin -u root --password=zxs123123 status
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
