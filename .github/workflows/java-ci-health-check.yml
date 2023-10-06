@@ -41,7 +41,12 @@ jobs:
           DATABASE_ENDPOINT: 127.0.0.1
         run: |
           mvn spring-boot:run
-          echo "curl -vvvv http://localhost:8080/healthz"
+          sleep 30
+          response=$(curl --write-out '%{http_code}' --silent --output /dev/null http://localhost:8080/healthz)
+          if [[ "$response" -ne 200 ]] ; then
+            echo "Health check failed with HTTP status code $response"
+            exit 1
+          fi
 
 
 
