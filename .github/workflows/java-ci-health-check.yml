@@ -8,10 +8,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Install MySQL 8.0.33
+      - name: Install MySQL 8.0
         run: |
           sudo apt-get update
-          sudo apt-get install -y mysql-server-8.0.33
+          sudo apt-get install -y mysql-server-8.0
           sudo service mysql start
           sudo mysql -u root -e "CREATE USER 'root'@'%' IDENTIFIED BY 'zxs123123';"
           sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';"
