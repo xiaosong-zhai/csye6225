@@ -7,12 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:8.0.33
+        image: mysql:8.0
         env:
-          USERNAME: root
-          PASSWORD: zxs123123
+          MYSQL_ROOT_PASSWORD: zx123123
         ports:
           - 3306:3306
+          # Before continuing, verify the mysql container is reachable from the ubuntu host
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - uses: actions/checkout@v3
       - name: Wait for MySQL
@@ -35,6 +37,11 @@ jobs:
           mvn -B package --file pom.xml
       # using maven to run spring boot application
       - name: Run health check
+        env:
+          DATABASE_NAME: csye6225
+          DATABASE_USERNAME: root
+          DATABASE_PASSWORD: zxs123123
+          DATABASE_ENDPOINT: 127.0.0.1
         run: |
           mvn spring-boot:run
           STATUS_CODE=$(curl --write-out "%{http_code}\n" --silent --output /dev/null "http://localhost:8080/healthz")
