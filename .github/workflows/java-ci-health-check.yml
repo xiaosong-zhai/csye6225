@@ -30,7 +30,6 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: |
-          mvn clean install
           mvn -B package --file pom.xml
       # using maven to run spring boot application
       - name: Run health check
@@ -40,8 +39,8 @@ jobs:
           DATABASE_PASSWORD: zxs123123
           DATABASE_ENDPOINT: 127.0.0.1
         run: |
-          mvn spring-boot:run
-          sleep 30
+          timeout --signal=SIGINT 5m mvn spring-boot:run &
+          sleep 30  # Give the application some time to start
           response=$(curl --write-out '%{http_code}' --silent --output /dev/null http://localhost:8080/healthz)
           if [[ "$response" -ne 200 ]] ; then
             echo "Health check failed with HTTP status code $response"
