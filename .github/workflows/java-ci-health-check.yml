@@ -1,0 +1,41 @@
+name: Java CI and Health Check
+
+on: [pull_request]
+
+jobs:
+  build-and-health-check:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0.33
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: zxs123123
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'amazon-corretto'
+          cache: maven
+      - name: Build with Maven
+        run: |
+          mvn clean install
+          mvn -B package --file pom.xml
+      # using maven to run spring boot application
+      - name: Run health check
+        run: |
+          mvn spring-boot:run
+          STATUS_CODE=$(curl --write-out "%{http_code}\n" --silent --output /dev/null "http://localhost:8080/healthz")
+        
+          # Check if the status code is 200
+          if [[ "$STATUS_CODE" -ne 200 ]] ; then
+          echo "Health check failed with status code $STATUS_CODE"
+          exit 1
+          else
+          echo "Health check passed with status code $STATUS_CODE"
+          fi
+
+
+
