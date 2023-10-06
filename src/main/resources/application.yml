@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: csye6225
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  # config for datasource
+  datasource:
+    driver-class-name: ${csye.datasource.driver-class-name}
+    url: jdbc:mysql://${csye.datasource.host}:${csye.datasource.port}/${csye.datasource.database}?createDatabaseIfNotExist=true
+    username: ${csye.datasource.username}
+    password: ${csye.datasource.password}
+    hikari:
+      connection-timeout: 2000
+  # config hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.MySQL8InnoDBDialect
