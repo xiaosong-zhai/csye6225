@@ -1,7 +1,7 @@
 csye:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    host: 127.0.0.1
+    host: mysql
     port: 3306
     database: csye6225
     username: root

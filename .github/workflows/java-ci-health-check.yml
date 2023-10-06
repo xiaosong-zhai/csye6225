@@ -18,7 +18,7 @@ jobs:
           echo "Waiting for MySQL..."
           for i in {1..30}
           do
-            nc -z 127.0.0.1 3306 && echo "MySQL is up!" && break
+            nc -z mysql 3306 && echo "MySQL is up!" && break
             sleep 1
           done
       - name: Set up JDK 17
