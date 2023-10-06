@@ -7,13 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:8.0.3
+        image: mysql:8.0.33
         env:
-          MYSQL_ROOT_PASSWORD: zxs123123
-          MYSQL_DATABASE: csye6225
+          USERNAME: root
+          PASSWORD: zxs123123
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
       - uses: actions/checkout@v3
       - name: Wait for MySQL
