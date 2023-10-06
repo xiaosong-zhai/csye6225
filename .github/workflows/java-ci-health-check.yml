@@ -9,8 +9,8 @@ jobs:
       mysql:
         image: mysql:8.0.33
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: zxs123123
+          MYSQL_ROOT_PASSWORD: zxs123123
+          MYSQL_DATABASE: csye6225
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
