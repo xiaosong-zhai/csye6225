@@ -22,6 +22,11 @@ jobs:
         with:
           version: ${{ env.PRODUCT_VERSION }}
 
+      - name: Packer Init
+        run: |
+          cd ./packer
+          packer init ami.us-west-2.pkr.hcl
+
       - name: Packer Format
         run: |
           packer fmt ./packer/ami.us-west-2.pkr.hcl
