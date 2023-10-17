@@ -1,0 +1,30 @@
+name: Packer CI And Status Check
+
+on:
+  pull_request:
+    paths:
+      - 'packer/ami.us-west-2.pkr.hcl'
+
+jobs:
+  packer-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Install Packer
+        uses: hashicorp/setup-packer@v1
+        with:
+          packer-version: 1.7.4
+
+      - name: Packer Format
+        run: |
+          packer fmt -check . 
+          if [ $? -eq 2 ]; then
+            echo "Packer fmt has detected errors"
+            exit 1
+          fi
+
+      - name: Packer Validate
+        run: |
+          packer validate . 
