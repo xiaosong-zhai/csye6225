@@ -11,16 +11,26 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Setup `packer`
+      - name: Setup packer
         uses: hashicorp/setup-packer@main
-        id: setup
         with:
           version: "latest"
 
       - name: Packer Init
         run: |
           cd ./packer
-          packer init ami.us-west-2.pkr.hcl     
+          packer init ami.us-west-2.pkr.hcl
+
+      - name: Debugging - Print environment variables
+        run: |
+          echo "AWS_REGION: $AWS_REGION"
+          echo "DEMO_ACCOUNT_ID: $DEMO_ACCOUNT_ID"
+          echo "INSTANCE_TYPE: $INSTANCE_TYPE"
+          echo "SOURCE_AMI: $SOURCE_AMI"
+          echo "SSH_USERNAME: $SSH_USERNAME"
+          echo "SUBNET_ID: $SUBNET_ID"
+          echo "VOLUME_SIZE: $VOLUME_SIZE"
+          echo "VOLUME_TYPE: $VOLUME_TYPE"
 
       - name: Packer Format
         run: |
@@ -31,24 +41,14 @@ jobs:
           fi
 
       - name: Packer Validate
-        env:
-          AWS_REGION: ${{ env.AWS_REGION }}
-          DEMO_ACCOUNT_ID: ${{ env.DEMO_ACCOUNT_ID }}
-          INSTANCE_TYPE: ${{ env.INSTANCE_TYPE }}
-          SOURCE_AMI: ${{ env.SOURCE_AMI }}
-          SSH_USERNAME: ${{ env.SSH_USERNAME }}
-          SUBNET_ID: ${{ env.SUBNET_ID }}
-          VOLUME_SIZE: ${{ env.VOLUME_SIZE }}
-          VOLUME_TYPE: ${{ env.VOLUME_TYPE }}
         run: |
           VOLUME_SIZE_INT=$((VOLUME_SIZE + 0))
-          packer validate -var "aws_region=${AWS_REGION}" \
-            -var "demo_account_id=${DEMO_ACCOUNT_ID}" \
-            -var "instance_type=${INSTANCE_TYPE}" \
-            -var "source_ami=${SOURCE_AMI}" \
-            -var "ssh_username=${SSH_USERNAME}" \
-            -var "subnet_id=${SUBNET_ID}" \
-            -var "volume_size=${VOLUME_SIZE_INT}" \
-            -var "volume_type=${VOLUME_TYPE}" \
+          packer validate -var "aws_region=$AWS_REGION" \
+            -var "demo_account_id=$DEMO_ACCOUNT_ID" \
+            -var "instance_type=$INSTANCE_TYPE" \
+            -var "source_ami=$SOURCE_AMI" \
+            -var "ssh_username=$SSH_USERNAME" \
+            -var "subnet_id=$SUBNET_ID" \
+            -var "volume_size=$VOLUME_SIZE_INT" \
+            -var "volume_type=$VOLUME_TYPE" \
             ./packer/ami.us-west-2.pkr.hcl
-
