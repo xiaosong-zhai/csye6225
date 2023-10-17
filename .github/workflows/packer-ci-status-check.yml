@@ -46,12 +46,13 @@ jobs:
           VOLUME_SIZE: ${{ env.VOLUME_SIZE }}
           VOLUME_TYPE: ${{ env.VOLUME_TYPE }}
         run: |
+          VOLUME_SIZE_INT=$((VOLUME_SIZE + 0))
           packer validate -var "aws_region=${AWS_REGION}" \
             -var "demo_account_id=${DEMO_ACCOUNT_ID}" \
             -var "instance_type=${INSTANCE_TYPE}" \
             -var "source_ami=${SOURCE_AMI}" \
             -var "ssh_username=${SSH_USERNAME}" \
             -var "subnet_id=${SUBNET_ID}" \
-            -var "volume_size=${VOLUME_SIZE}" \
+            -var "volume_size=${VOLUME_SIZE_INT}" \
             -var "volume_type=${VOLUME_TYPE}" \
             ./packer/ami.us-west-2.pkr.hcl
