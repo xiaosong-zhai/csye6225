@@ -38,8 +38,8 @@ variable "instance_type" {
 }
 
 variable "volume_size" {
-  type    = string
-  default = ""
+  type    = number
+  default = 8
 }
 
 variable "volume_type" {
@@ -73,7 +73,7 @@ source "amazon-ebs" "my-ami" {
   launch_block_device_mappings {
     delete_on_termination = true
     device_name           = "/dev/sda1"
-    volume_size           = "${var.volume_size}"
+    volume_size           = var.volume_size
     volume_type           = "${var.volume_type}"
   }
 
