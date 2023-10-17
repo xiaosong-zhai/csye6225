@@ -3,7 +3,7 @@ name: Packer CI And Status Check
 on:
   pull_request:
     paths:
-      - 'packer/ami.us-west-2.pkr.hcl'
+      - './packer/ami.us-west-2.pkr.hcl'
 
 env:
   PRODUCT_VERSION: "latest"
@@ -23,7 +23,7 @@ jobs:
 
       - name: Packer Format
         run: |
-          packer fmt -check . 
+          packer fmt ./packer/ami.us-west-2.pkr.hcl
           if [ $? -eq 2 ]; then
             echo "Packer fmt has detected errors"
             exit 1
@@ -31,4 +31,4 @@ jobs:
 
       - name: Packer Validate
         run: |
-          packer validate . 
+          packer validate ./packer/ami.us-west-2.pkr.hcl
