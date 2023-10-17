@@ -2,12 +2,7 @@ name: Packer CI And Status Check
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - 'packer/ami.us-west-2.pkr.hcl'
-
-env:
-  PRODUCT_VERSION: "latest"
+    branches: [ main ]
 
 jobs:
   packer-ci:
@@ -20,7 +15,7 @@ jobs:
         uses: hashicorp/setup-packer@main
         id: setup
         with:
-          version: ${{ env.PRODUCT_VERSION }}
+          version: "latest"
 
       - name: Packer Init
         run: |
