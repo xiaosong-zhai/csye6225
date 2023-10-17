@@ -2,8 +2,9 @@ name: Packer CI And Status Check
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     paths:
-      - './packer/ami.us-west-2.pkr.hcl'
+      - 'packer/ami.us-west-2.pkr.hcl'
 
 env:
   PRODUCT_VERSION: "latest"
