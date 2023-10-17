@@ -36,5 +36,14 @@ jobs:
           fi
 
       - name: Packer Validate
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          DEMO_ACCOUNT_ID: ${{ env.DEMO_ACCOUNT_ID }}
+          INSTANCE_TYPE: ${{ env.INSTANCE_TYPE }}
+          SOURCE_AMI: ${{ env.SOURCE_AMI }}
+          SSH_USERNAME: ${{ env.SSH_USERNAME }}
+          SUBNET_ID: ${{ env.SUBNET_ID }}
+          VOLUME_SIZE: ${{ env.VOLUME_SIZE }}
+          VOLUME_TYPE: ${{ env.VOLUME_TYPE }}
         run: |
           packer validate ./packer/ami.us-west-2.pkr.hcl
