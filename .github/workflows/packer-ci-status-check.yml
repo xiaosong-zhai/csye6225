@@ -1,21 +1,12 @@
 name: Packer CI And Status Check
 
 on:
-  pull_request:
+  pull_request_target:
     branches: [ main ]
 
 jobs:
   packer-ci:
     runs-on: ubuntu-latest
-    env:
-      AWS_REGION: ${{ env.AWS_REGION }}
-      DEMO_ACCOUNT_ID: ${{ env.DEMO_ACCOUNT_ID }}
-      INSTANCE_TYPE: ${{ env.INSTANCE_TYPE }}
-      SOURCE_AMI: ${{ env.SOURCE_AMI }}
-      SSH_USERNAME: ${{ env.SSH_USERNAME }}
-      SUBNET_ID: ${{ env.SUBNET_ID }}
-      VOLUME_SIZE: ${{ env.VOLUME_SIZE }}
-      VOLUME_TYPE: ${{ env.VOLUME_TYPE }}
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -51,6 +42,15 @@ jobs:
           fi
 
       - name: Packer Validate
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          DEMO_ACCOUNT_ID: ${{ env.DEMO_ACCOUNT_ID }}
+          INSTANCE_TYPE: ${{ env.INSTANCE_TYPE }}
+          SOURCE_AMI: ${{ env.SOURCE_AMI }}
+          SSH_USERNAME: ${{ env.SSH_USERNAME }}
+          SUBNET_ID: ${{ env.SUBNET_ID }}
+          VOLUME_SIZE: ${{ env.VOLUME_SIZE }}
+          VOLUME_TYPE: ${{ env.VOLUME_TYPE }}
         run: |
           VOLUME_SIZE_INT=$((VOLUME_SIZE + 0))
           packer validate -var "aws_region=${AWS_REGION}" \
