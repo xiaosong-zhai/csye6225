@@ -20,18 +20,7 @@ jobs:
       - name: Packer Init
         run: |
           cd ./packer
-          packer init ami.us-west-2.pkr.hcl
-
-      - name: Debugging - Print environment variables
-        run: |
-          echo "AWS_REGION: ${{ env.AWS_REGION }}"
-          echo "DEMO_ACCOUNT_ID: ${{ env.DEMO_ACCOUNT_ID }}"
-          echo "INSTANCE_TYPE: ${{ env.INSTANCE_TYPE }}"
-          echo "SOURCE_AMI: ${{ env.SOURCE_AMI }}"
-          echo "SSH_USERNAME: ${{ env.SSH_USERNAME }}"
-          echo "SUBNET_ID: ${{ env.SUBNET_ID }}"
-          echo "VOLUME_SIZE: ${{ env.VOLUME_SIZE }}"
-          echo "VOLUME_TYPE: ${{ env.VOLUME_TYPE }}"          
+          packer init ami.us-west-2.pkr.hcl     
 
       - name: Packer Format
         run: |
