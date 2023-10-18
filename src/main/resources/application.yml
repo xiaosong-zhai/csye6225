@@ -26,3 +26,10 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     database-platform: org.hibernate.dialect.MySQL8InnoDBDialect
+
+# CSV file path
+csv:
+  file:
+    # path: "classpath:static/users.csv"
+    # linux path
+    path: "file:/opt/users.csv"

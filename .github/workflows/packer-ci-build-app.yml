@@ -1,0 +1,63 @@
+name: Build and Deploy
+
+on:
+#  push:
+#    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: |
+          mvn -B package --file pom.xml
+          cp target/csye6225-0.0.1-SNAPSHOT.jar ./packer/webapp.jar
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          version: 'latest'
+
+      # 构建 AMI
+      - name: Build AMI
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          DEMO_ACCOUNT_ID: ${{ vars.DEMO_ACCOUNT_ID }}
+          INSTANCE_TYPE: ${{ vars.INSTANCE_TYPE }}
+          SOURCE_AMI: ${{ vars.SOURCE_AMI }}
+          SSH_USERNAME: ${{ vars.SSH_USERNAME }}
+          SUBNET_ID: ${{ vars.SUBNET_ID }}
+          VOLUME_SIZE: ${{ vars.VOLUME_SIZE }}
+          VOLUME_TYPE: ${{ vars.VOLUME_TYPE }}
+        run: |
+          cd ./packer
+          packer build -var "aws_region=${{ env.AWS_REGION }}" \
+            -var "demo_account_id=${{ env.DEMO_ACCOUNT_ID }}" \
+            -var "instance_type=${{ env.INSTANCE_TYPE }}" \
+            -var "source_ami=${{ env.SOURCE_AMI }}" \
+            -var "ssh_username=${{ env.SSH_USERNAME }}" \
+            -var "subnet_id=${{ env.SUBNET_ID }}" \
+            -var "volume_size=${VOLUME_SIZE_INT}" \
+            -var "volume_type=${{ env.VOLUME_TYPE }}" \
+            ami.us-west-2.pkr.hcl
+

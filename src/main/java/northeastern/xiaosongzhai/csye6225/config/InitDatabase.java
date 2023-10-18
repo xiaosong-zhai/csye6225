@@ -6,8 +6,10 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,8 @@ public class InitDatabase implements CommandLineRunner {
 
     @Autowired
     private AccountRepository accountRepository;
+    @Value("${csv.file.path}")
+    private String csvFilePath;
 
     @Override
     public void run(String... args) throws Exception {
@@ -50,7 +54,7 @@ public class InitDatabase implements CommandLineRunner {
 
     private List<Account> loadCSVFile() {
         List<Account> accounts = null;
-        try {Resource resource = new ClassPathResource("static/users.csv");
+        try {Resource resource = new DefaultResourceLoader().getResource(csvFilePath);
             CSVParser csvParser = new CSVParser(new InputStreamReader(resource.getInputStream()), CSVFormat.DEFAULT.withHeader());
             accounts = new ArrayList<>();
             for (CSVRecord csvRecord : csvParser) {

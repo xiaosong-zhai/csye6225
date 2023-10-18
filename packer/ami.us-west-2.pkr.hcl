@@ -86,6 +86,26 @@ source "amazon-ebs" "my-ami" {
 build {
   sources = ["source.amazon-ebs.my-ami"]
 
+  provisioner "file" {
+    source      = "./webapp.jar"
+    destination = "/tmp/webapp.jar"
+  }
+
+  provisioner "file" {
+    source      = "../src/main/resources/static/users.csv"
+    destination = "/tmp/users.csv"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo mv /tmp/webapp.jar /root/webapp.jar",
+      "sudo chown root:root /root/webapp.jar",
+
+      "sudo mv /tmp/users.csv /opt/users.csv",
+      "sudo chown root:root /opt/users.csv",
+    ]
+  }
+
   provisioner "shell" {
     environment_vars = [
       "DEBIAN_FRONTEND=noninteractive",
@@ -95,11 +115,6 @@ build {
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
       "sudo apt-get install -y openjdk-17-jdk",
-      "sudo apt-get install -y maven",
-      "sudo apt-get install -y mysql-server",
-      "sudo systemctl enable mysql",
-      "sudo systemctl start mysql",
-      "sudo apt-get clean",
     ]
   }
 }
