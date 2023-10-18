@@ -87,12 +87,12 @@ build {
   sources = ["source.amazon-ebs.my-ami"]
 
   provisioner "file" {
-    source      = "./webapp.jar"
+    source      = "/home/runner/work/webapp/webapp/target/csye6225-0.0.1-SNAPSHOT.jar"
     destination = "/tmp/webapp.jar"
   }
 
   provisioner "file" {
-    source      = "../src/main/resources/static/users.csv"
+    source      = "/home/runner/work/webapp/webapp/src/main/resources/static/users.csv"
     destination = "/tmp/users.csv"
   }
 
@@ -102,7 +102,6 @@ build {
       "sudo chown root:root /root/webapp.jar",
 
       "sudo mv /tmp/users.csv /opt/users.csv",
-      "sudo chown root:root /opt/users.csv",
     ]
   }
 
