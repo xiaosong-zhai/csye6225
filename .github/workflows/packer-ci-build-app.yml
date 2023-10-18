@@ -37,6 +37,11 @@ jobs:
         with:
           version: 'latest'
 
+      - name: Packer Init
+        run: |
+          cd ./packer
+          packer init ami.us-west-2.pkr.hcl
+
       - name: Build AMI
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
