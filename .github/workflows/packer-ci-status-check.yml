@@ -51,12 +51,13 @@ jobs:
 
       - name: Packer Validate
         run: |
+          VOLUME_SIZE_INT=$(printf '%d' "$VOLUME_SIZE")
           packer validate -var "aws_region=${{ env.AWS_REGION }}" \
             -var "demo_account_id=${{ env.DEMO_ACCOUNT_ID }}" \
             -var "instance_type=${{ env.INSTANCE_TYPE }}" \
             -var "source_ami=${{ env.SOURCE_AMI }}" \
             -var "ssh_username=${{ env.SSH_USERNAME }}" \
             -var "subnet_id=${{ env.SUBNET_ID }}" \
-            -var "volume_size=${{ env.VOLUME_SIZE }}" \
+            -var "volume_size=${VOLUME_SIZE_INT}" \
             -var "volume_type=${{ env.VOLUME_TYPE }}" \
             ./packer/ami.us-west-2.pkr.hcl
