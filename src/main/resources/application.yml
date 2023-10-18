@@ -30,6 +30,6 @@ spring:
 # CSV file path
 csv:
   file:
-    # path: "classpath:static/users.csv"
+    path: "classpath:static/users.csv"
     # linux path
-    path: "file:/opt/users.csv"
+    # path: "file:/opt/users.csv"

@@ -25,6 +25,10 @@ jobs:
         with:
           version: "latest"
 
+      - name: Build with Maven
+        run: |
+          mvn -B package --file pom.xml
+
       - name: Packer Init
         run: |
           cd ./packer

@@ -31,14 +31,12 @@ jobs:
       - name: Build with Maven
         run: |
           mvn -B package --file pom.xml
-          cp target/csye6225-0.0.1-SNAPSHOT.jar ./packer/webapp.jar
 
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
         with:
           version: 'latest'
 
-      # 构建 AMI
       - name: Build AMI
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
@@ -51,6 +49,7 @@ jobs:
           VOLUME_TYPE: ${{ vars.VOLUME_TYPE }}
         run: |
           cd ./packer
+          VOLUME_SIZE_INT=$(printf '%d' "$VOLUME_SIZE")
           packer build -var "aws_region=${{ env.AWS_REGION }}" \
             -var "demo_account_id=${{ env.DEMO_ACCOUNT_ID }}" \
             -var "instance_type=${{ env.INSTANCE_TYPE }}" \
