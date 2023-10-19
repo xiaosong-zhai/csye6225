@@ -114,16 +114,22 @@ build {
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
       "sudo apt-get install -y openjdk-17-jdk",
-      "sudo apt-get install -y wget",
-      "echo mysql-apt-config mysql-apt-config/select-server select mysql-8.0 | sudo debconf-set-selections",
-      "wget https://dev.mysql.com/get/mysql-apt-config_0.8.26-1_all.deb",
-      "sudo DEBIAN_FRONTEND=noninteractive dpkg -i mysql-apt-config_0.8.26-1_all.deb",
-      "echo mysql-server mysql-server/root_password password zxs123123 | sudo debconf-set-selections",
-      "echo mysql-server mysql-server/root_password_again password zxs123123 | sudo debconf-set-selections",
-      "sudo apt-get install -y mysql-server",
-      "sudo systemctl enable mysql",
-      "sudo systemctl start mysql",
-      "sudo mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'zxs123123';\"",
+
+      "echo mariadb-server mysql-server/root_password password zxs123123 | sudo debconf-set-selections",
+      "echo mariadb-server mysql-server/root_password_again password zxs123123 | sudo debconf-set-selections",
+
+      "sudo apt-get install -y mariadb-server mariadb-client",
+
+      "sudo systemctl enable mariadb",
+      "sudo systemctl start mariadb",
+
+      "sudo mysql -e \"UPDATE mysql.user SET plugin = 'mysql_native_password' WHERE User = 'root';\"",
+      "sudo mysql -e \"GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'zxs123123' WITH GRANT OPTION;\"",
+      "sudo mysql -e \"FLUSH PRIVILEGES;\"",
+
+      "sudo mysql -e \"DROP DATABASE IF EXISTS test;\"",
+      "sudo mysql -e \"DELETE FROM mysql.user WHERE User = '';\"",
+
       "sudo mysql -e \"FLUSH PRIVILEGES;\""
     ]
   }

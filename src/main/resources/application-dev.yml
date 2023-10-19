@@ -1,6 +1,6 @@
 csye:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.mariadb.jdbc.Driver
     host: 127.0.0.1
     port: 3306
     database: csye6225
