@@ -119,18 +119,6 @@ build {
       "echo mariadb-server mysql-server/root_password_again password zxs123123 | sudo debconf-set-selections",
 
       "sudo apt-get install -y mariadb-server mariadb-client",
-
-      "sudo systemctl enable mariadb",
-      "sudo systemctl start mariadb",
-
-      "sudo mysql -e \"UPDATE mysql.user SET plugin = 'mysql_native_password' WHERE User = 'root';\"",
-      "sudo mysql -e \"GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'zxs123123' WITH GRANT OPTION;\"",
-      "sudo mysql -e \"FLUSH PRIVILEGES;\"",
-
-      "sudo mysql -e \"DROP DATABASE IF EXISTS test;\"",
-      "sudo mysql -e \"DELETE FROM mysql.user WHERE User = '';\"",
-
-      "sudo mysql -e \"FLUSH PRIVILEGES;\""
     ]
   }
 }
