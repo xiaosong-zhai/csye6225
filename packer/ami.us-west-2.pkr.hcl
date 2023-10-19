@@ -114,6 +114,11 @@ build {
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
       "sudo apt-get install -y openjdk-17-jdk",
+      "sudo apt-get install -y mysql-server",
+      "sudo systemctl enable mysql",
+      "sudo systemctl start mysql",
+      "sudo mysql -e \"ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'zxs123123';\"",
+      "sudo mysql -e \"FLUSH PRIVILEGES;\""
     ]
   }
 }
