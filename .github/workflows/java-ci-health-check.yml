@@ -1,7 +1,7 @@
 name: Java CI and Health Check
 
 on:
-  pull_request:
+  push:
     branches: [ main ]
 
 jobs:
