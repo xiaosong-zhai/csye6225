@@ -18,4 +18,5 @@ email: jane.doe@example.com
 password: xyz456
 ```
 4. The application will be running on http://localhost:8080
+5. Demo packer
 
