@@ -1,0 +1,16 @@
+[Unit]
+Description = Webapp
+After = network.target
+
+[Service]
+WorkingDirectory=/opt/csye6225/
+User=root
+ExecStart=java -jar /opt/webapp.jar --spring.profiles.active=demo --spring.config.location=file:/opt/csye6225/application-demo.yml --csv.file.path=file:/opt/users.csv
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=csye6225
+
+[Install]
+WantedBy=multi-user.target

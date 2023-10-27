@@ -96,12 +96,16 @@ build {
     destination = "/tmp/users.csv"
   }
 
+  provisioner "file" {
+    source      = "/home/runner/work/webapp/webapp/src/main/resources/csye6225.service"
+    destination = "/tmp/csye6225.service"
+  }
+
   provisioner "shell" {
     inline = [
-      "sudo mv /tmp/webapp.jar /root/webapp.jar",
-      "sudo chown root:root /root/webapp.jar",
-
+      "sudo mv /tmp/webapp.jar /opt/webapp.jar",
       "sudo mv /tmp/users.csv /opt/users.csv",
+      "sudo mv /tmp/csye6225.service /etc/systemd/system/csye6225.service"
     ]
   }
 
@@ -114,11 +118,6 @@ build {
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
       "sudo apt-get install -y openjdk-17-jdk",
-
-      "echo mariadb-server mysql-server/root_password password zxs123123 | sudo debconf-set-selections",
-      "echo mariadb-server mysql-server/root_password_again password zxs123123 | sudo debconf-set-selections",
-
-      "sudo apt-get install -y mariadb-server mariadb-client",
     ]
-           }
-     }
+  }
+}
