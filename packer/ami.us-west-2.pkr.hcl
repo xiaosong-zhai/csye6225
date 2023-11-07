@@ -101,11 +101,17 @@ build {
     destination = "/tmp/csye6225.service"
   }
 
+  provisioner "file" {
+    source      = "/home/runner/work/webapp/webapp/src/main/resources/cloudwatch-config.json"
+    destination = "/tmp/cloudwatch-config.json"
+  }
+
   provisioner "shell" {
     inline = [
       "sudo mv /tmp/webapp.jar /opt/webapp.jar",
       "sudo mv /tmp/users.csv /opt/users.csv",
-      "sudo mv /tmp/csye6225.service /etc/systemd/system/csye6225.service"
+      "sudo mv /tmp/csye6225.service /etc/systemd/system/csye6225.service",
+      "sudo mv /tmp/cloudwatch-config.json /opt/cloudwatch-config.json"
     ]
   }
 
@@ -118,6 +124,8 @@ build {
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
       "sudo apt-get install -y openjdk-17-jdk",
+      "wget https://amazoncloudwatch-agent.s3.amazonaws.com/debian/amd64/latest/amazon-cloudwatch-agent.deb",
+      "sudo dpkg -i -E ./amazon-cloudwatch-agent.deb"
     ]
-           }
-     }
+  }
+}
