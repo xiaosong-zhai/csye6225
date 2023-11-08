@@ -1,5 +1,6 @@
 package northeastern.xiaosongzhai.csye6225.service.impl;
 
+import northeastern.xiaosongzhai.csye6225.config.Foo;
 import northeastern.xiaosongzhai.csye6225.service.HealthCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
