@@ -26,7 +26,6 @@ public class SubmissionServiceImpl implements SubmissionService {
         String submissionUrl = submissionDTO.getSubmission_url();
         Submission submission = new Submission();
         submission.setId(UUID.randomUUID().toString());
-        submission.setAssignment_id(id);
         submission.setSubmission_url(submissionUrl);
         submission.setSubmission_date(LocalDateTime.now().toString());
         submission.setSubmission_updated(LocalDateTime.now().toString());
