@@ -26,7 +26,6 @@ public class Submission implements Serializable {
     @Column(updatable = false)
     private String id;
 
-    @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false)
     private String assignment_id;
