@@ -26,10 +26,6 @@ public class Submission implements Serializable {
     @Column(updatable = false)
     private String id;
 
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(updatable = false)
-    private String assignment_id;
-
     @Column(nullable = false)
     private String submission_url;
 
