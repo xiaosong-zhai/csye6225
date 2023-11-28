@@ -50,6 +50,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
         try{
             Connection connection = dataSource.getConnection();
             if (connection.isValid(2)){
+                connection.close();
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .headers(headers)
