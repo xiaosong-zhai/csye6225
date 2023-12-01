@@ -42,7 +42,7 @@ public class SubmissionController {
      * @param id id
      * @param submissionDTO submissionDTO
      */
-    @PostMapping("/{id}/submissions")
+    @PostMapping("/{id}/submission")
     public Response<Submission> createSubmission(@PathVariable String id,
                                                  @Valid
                                                  @RequestBody SubmissionDTO submissionDTO,
@@ -50,7 +50,7 @@ public class SubmissionController {
         Assignment assignment = assignmentService.getAssignmentById(id);
 
         if (assignment == null) {
-            return Response.noContent();
+            return Response.notFound("Assignment not found");
         }
 
         LocalDateTime deadline = LocalDateTime.parse(assignment.getDeadline(), DateTimeFormatter.ISO_DATE_TIME);
@@ -58,7 +58,7 @@ public class SubmissionController {
             return Response.forbidden("The deadline has passed");
         }
 
-        long countSubmission = submissionRepository.countSubmissionsByIdAndEmail(id, principal.getName());
+        int countSubmission = submissionRepository.countSubmissionsByIdAndEmail(id, principal.getName());
         if (countSubmission > assignment.getNum_of_attempts()) {
             return Response.forbidden("You have exceeded the number of attempts");
         }
