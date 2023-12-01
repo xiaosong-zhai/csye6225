@@ -39,4 +39,6 @@ public class Submission implements Serializable {
     @JsonIgnore
     private Assignment assignment;
 
+    @Column(name = "assignment_id", insertable = false, updatable = false)
+    private String assignmentId;
 }
