@@ -76,7 +76,7 @@ public class SubmissionController {
 
         Submission submission = submissionService.createSubmission(id, submissionDTO, assignment, submitEmail);
 
-//        publishToSns(submissionDTO.getSubmission_url(), principal.getName());
+        publishToSns(submissionDTO.getSubmission_url(), principal.getName());
 
         return Response.success(submission);
 
