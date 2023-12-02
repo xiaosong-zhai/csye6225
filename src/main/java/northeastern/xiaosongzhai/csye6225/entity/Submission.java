@@ -34,11 +34,15 @@ public class Submission implements Serializable {
     private String submission_updated;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assignment_id", referencedColumnName = "id")
+    @JoinColumn(name = "assignmentId", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Assignment assignment;
 
-    @Column(name = "assignment_id", insertable = false, updatable = false)
-    private String assignmentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "email", referencedColumnName = "email")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Account account;
+
 }

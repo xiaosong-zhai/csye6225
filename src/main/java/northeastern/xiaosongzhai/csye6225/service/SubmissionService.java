@@ -1,5 +1,7 @@
 package northeastern.xiaosongzhai.csye6225.service;
 
+import northeastern.xiaosongzhai.csye6225.entity.Account;
+import northeastern.xiaosongzhai.csye6225.entity.Assignment;
 import northeastern.xiaosongzhai.csye6225.entity.Submission;
 import northeastern.xiaosongzhai.csye6225.entity.SubmissionDTO;
 
@@ -10,6 +12,6 @@ import northeastern.xiaosongzhai.csye6225.entity.SubmissionDTO;
  */
 public interface SubmissionService {
 
-    Submission createSubmission(String id, SubmissionDTO submissionDTO);
+    Submission createSubmission(String id, SubmissionDTO submissionDTO, Assignment assignment, Account account);
 
 }

@@ -7,15 +7,19 @@ import com.amazonaws.services.sns.model.ListTopicsResult;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.google.gson.JsonObject;
 import jakarta.validation.Valid;
+import northeastern.xiaosongzhai.csye6225.entity.Account;
 import northeastern.xiaosongzhai.csye6225.entity.Assignment;
 import northeastern.xiaosongzhai.csye6225.entity.Submission;
 import northeastern.xiaosongzhai.csye6225.entity.SubmissionDTO;
+import northeastern.xiaosongzhai.csye6225.repository.AccountRepository;
 import northeastern.xiaosongzhai.csye6225.repository.SubmissionRepository;
 import northeastern.xiaosongzhai.csye6225.response.Response;
 import northeastern.xiaosongzhai.csye6225.service.AssignmentService;
 import northeastern.xiaosongzhai.csye6225.service.SubmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -36,6 +40,8 @@ public class SubmissionController {
     private SubmissionRepository submissionRepository;
     @Autowired
     private SubmissionService submissionService;
+    @Autowired
+    private AccountRepository accountRepository;
 
     /**
      * create a submission
@@ -58,14 +64,19 @@ public class SubmissionController {
             return Response.forbidden("The deadline has passed");
         }
 
-        int countSubmission = submissionRepository.countSubmissionsByIdAndEmail(id, principal.getName());
-        if (countSubmission > assignment.getNum_of_attempts()) {
+        Account submitEmail = accountRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        String email = submitEmail.getEmail();
+
+        int countSubmission = submissionRepository.countSubmissionsByIdAndEmail(id, email);
+        if (countSubmission >= assignment.getNum_of_attempts()) {
             return Response.forbidden("You have exceeded the number of attempts");
         }
 
-        Submission submission = submissionService.createSubmission(id, submissionDTO);
+        Submission submission = submissionService.createSubmission(id, submissionDTO, assignment, submitEmail);
 
-        publishToSns(submissionDTO.getSubmission_url(), principal.getName());
+//        publishToSns(submissionDTO.getSubmission_url(), principal.getName());
 
         return Response.success(submission);
 

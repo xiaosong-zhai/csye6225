@@ -14,7 +14,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SubmissionRepository extends JpaRepository<Submission, String> {
 
-    @Query("SELECT COUNT(s) FROM Submission s WHERE s.assignment.id = :id and s.assignment.created_by.email = :email")
+    @Query("SELECT COUNT(s) FROM Submission s WHERE s.assignment.id = :id and s.account.email = :email")
     Integer countSubmissionsByIdAndEmail(@Param("id") String id, @Param("email") String email);
+
 
 }
