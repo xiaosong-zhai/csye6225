@@ -1,5 +1,7 @@
 package northeastern.xiaosongzhai.csye6225.service.impl;
 
+import northeastern.xiaosongzhai.csye6225.entity.Account;
+import northeastern.xiaosongzhai.csye6225.entity.Assignment;
 import northeastern.xiaosongzhai.csye6225.entity.Submission;
 import northeastern.xiaosongzhai.csye6225.entity.SubmissionDTO;
 import northeastern.xiaosongzhai.csye6225.repository.SubmissionRepository;
@@ -22,14 +24,15 @@ public class SubmissionServiceImpl implements SubmissionService {
     private SubmissionRepository submissionRepository;
 
     @Override
-    public Submission createSubmission(String id, SubmissionDTO submissionDTO) {
+    public Submission createSubmission(String id, SubmissionDTO submissionDTO, Assignment assignment, Account account) {
         String submissionUrl = submissionDTO.getSubmission_url();
         Submission submission = new Submission();
         submission.setId(UUID.randomUUID().toString());
         submission.setSubmission_url(submissionUrl);
         submission.setSubmission_date(LocalDateTime.now().toString());
         submission.setSubmission_updated(LocalDateTime.now().toString());
-
+        submission.setAssignment(assignment);
+        submission.setAccount(account);
         return submissionRepository.save(submission);
 
     }
