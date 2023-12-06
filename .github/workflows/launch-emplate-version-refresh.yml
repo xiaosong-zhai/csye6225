@@ -1,0 +1,74 @@
+name: Launch Template Version And Refresh
+
+on:
+  workflow_run:
+    workflows: ["Build and Deploy"]
+    branches: [ main ]
+    types:
+      - completed
+
+jobs:
+  update-and-refresh-instances:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.DEMO_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEMO_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Get Launch Template ID
+        run: |
+          vars.LAUNCH_TEMPLATE_ID=$(aws ec2 describe-launch-templates \
+              --filters "Name=launch-template-name,Values=${{ vars.LAUNCH_TEMPLATE_NAME }}" \
+              --query "LaunchTemplates[0].LaunchTemplateId" \
+              --output text)
+          echo "LAUNCH_TEMPLATE_ID=${{ vars.LAUNCH_TEMPLATE_ID }}" >> $GITHUB_ENV
+
+      - name: Create a new Launch Template version
+        run: |
+          aws ec2 create-launch-template-version \
+              --launch-template-id ${{ vars.LAUNCH_TEMPLATE_ID }} \
+              --source-version ${{ vars.LAUNCH_TEMPLATE_VERSION }} \
+              --launch-template-data "{\"ImageId\":\"${{ vars.AMI_ID }}\"}"
+
+      - name: Set The Default Launch Template version
+        run: |
+          aws ec2 modify-launch-template \
+              --launch-template-id ${{ vars.LAUNCH_TEMPLATE_ID }} \
+              --default-version ${{ vars.LAUNCH_TEMPLATE_VERSION }}
+
+      - name: Update Auto Scaling Group to use new Launch Template version
+        run: |
+          aws autoscaling update-auto-scaling-group \
+              --auto-scaling-group-name ${{ vars.AUTO_SCALING_GROUP_NAME }} \
+              --launch-template "{\"LaunchTemplateId\":\"${{ vars.LAUNCH_TEMPLATE_ID }}\",\"Version\":\"${{ vars.LAUNCH_TEMPLATE_VERSION }}\"}"
+
+      - name: Refresh Auto Scaling Group Instances
+        run: |
+          aws autoscaling start-instance-refresh \
+              --auto-scaling-group-name ${{ vars.AUTO_SCALING_GROUP_NAME }} \
+              --preferences "{\"InstanceWarmup\":300,\"MinHealthyPercentage\":100}"
+
+      - name: Wait for Instance Refresh Completion
+        run: |
+          while true; do
+            status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name YOUR_AUTO_SCALING_GROUP_NAME --query 'InstanceRefreshes[0].Status' --output text)
+            if [[ $status == "Successful" ]]; then
+              echo "Instance refresh completed successfully"
+              break
+            elif [[ $status == "Failed" ]]; then
+              echo "Instance refresh failed"
+              exit 1
+            else
+              echo "Waiting for instance refresh..."
+              sleep 20
+            fi
+          done
+
+
