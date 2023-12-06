@@ -67,6 +67,14 @@ jobs:
             -var "volume_type=${{ env.VOLUME_TYPE }}" \
             ami.us-west-2.pkr.hcl
 
+      - name: List files in current directory
+        run: |
+          ls -al
+
+      - name: move output-ami-id.txt to root
+        run: |
+          mv ./packer/output-ami-id.txt ./output-ami-id.txt
+
       - name: Configure AWS CLI
         run: |
           aws configure set aws_access_key_id ${{ secrets.DEMO_ACCESS_KEY_ID }} && \
