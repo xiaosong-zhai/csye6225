@@ -113,7 +113,7 @@ jobs:
           aws configure set default.output_format json
           completed="false"
           while [ "$completed" != "true" ]; do
-            status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name ${{ vars.ASG_NAME }} --query 'InstanceRefreshes[0].Status' --output text)
+            status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name ${{ vars.AUTO_SCALING_GROUP_NAME }} --query 'InstanceRefreshes[0].Status' --output text)
             if [ "$status" == "Successful" ]; then
               completed="true"
             elif [ "$status" == "Failed" ]; then
