@@ -134,7 +134,10 @@ build {
   }
 
   post-processor "shell-local" {
-    inline = ["ami_id=$(jq -r '.builds[-1].artifact_id' manifest.json | cut -d':' -f2)", "echo $ami_id > output-ami-id.txt"]
+    inline = [
+      "ami_id=$(jq -r '.builds[-1].artifact_id' manifest.json | cut -d':' -f2 | cut -d',' -f1)",
+      "echo $ami_id > output-ami-id.txt"
+    ]
   }
 
 }
