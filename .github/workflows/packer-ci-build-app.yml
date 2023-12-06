@@ -66,8 +66,6 @@ jobs:
             -var "volume_size=${VOLUME_SIZE_INT}" \
             -var "volume_type=${{ env.VOLUME_TYPE }}" \
             ami.us-west-2.pkr.hcl
-          ami_id=$(echo "$output" | grep -oP 'ami-\w+')
-          echo $ami_id > output-ami-id.txt
 
       - name: Configure AWS CLI
         run: |
