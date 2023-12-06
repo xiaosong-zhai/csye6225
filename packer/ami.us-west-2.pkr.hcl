@@ -128,4 +128,12 @@ build {
       "sudo dpkg -i -E ./amazon-cloudwatch-agent.deb"
     ]
   }
+  post-processor "manifest" {
+    output = "manifest.json"
+    strip_path = true
+  }
+
+  post-processor "shell-local" {
+    inline = ["ami_id=$(jq -r '.builds[-1].artifact_id' manifest.json | cut -d':' -f2)", "echo $ami_id > output-ami-id.txt"]
+  }
 }
