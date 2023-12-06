@@ -31,7 +31,7 @@ import java.time.format.DateTimeFormatter;
  * @Description: Submission controller
  */
 @RestController
-@RequestMapping("/v1/assignments")
+@RequestMapping("/v2/assignments")
 public class SubmissionController {
 
     @Autowired

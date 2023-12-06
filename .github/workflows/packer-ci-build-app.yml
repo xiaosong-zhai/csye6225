@@ -53,7 +53,7 @@ jobs:
         run: |
           cd ./packer
           VOLUME_SIZE_INT=$(printf '%d' "$VOLUME_SIZE")
-          packer build -var "aws_region=${{ env.AWS_REGION }}" \
+          output=$(packer build -var "aws_region=${{ env.AWS_REGION }}" \
             -var "demo_account_id=${{ env.DEMO_ACCOUNT_ID }}" \
             -var "instance_type=${{ env.INSTANCE_TYPE }}" \
             -var "source_ami=${{ env.SOURCE_AMI }}" \
@@ -61,5 +61,7 @@ jobs:
             -var "subnet_id=${{ env.SUBNET_ID }}" \
             -var "volume_size=${VOLUME_SIZE_INT}" \
             -var "volume_type=${{ env.VOLUME_TYPE }}" \
-            ami.us-west-2.pkr.hcl
+            ami.us-west-2.pkr.hcl)
+          ami_id=$(echo "$output" | grep -oP 'ami-\w+')
+          echo "AMI_ID=$ami_id" >> $GITHUB_ENV
 
