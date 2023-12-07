@@ -19,4 +19,5 @@ password: xyz456
 ```
 4. The application will be running on http://localhost:8080
 5. Demo packer
+6. Test Assignment 10
 
