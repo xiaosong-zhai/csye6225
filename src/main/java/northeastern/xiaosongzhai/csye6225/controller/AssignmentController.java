@@ -21,7 +21,7 @@ import java.util.List;
  * @Description: Assignment controller
  */
 @RestController
-@RequestMapping("/v1/assignments")
+@RequestMapping("/v2/assignments")
 public class AssignmentController {
     @Autowired
     private AssignmentService assignmentService;

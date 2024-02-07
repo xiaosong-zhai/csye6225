@@ -1,5 +1,6 @@
 package northeastern.xiaosongzhai.csye6225.service.impl;
 
+import northeastern.xiaosongzhai.csye6225.config.Foo;
 import northeastern.xiaosongzhai.csye6225.service.HealthCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -49,6 +50,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
         try{
             Connection connection = dataSource.getConnection();
             if (connection.isValid(2)){
+                connection.close();
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .headers(headers)

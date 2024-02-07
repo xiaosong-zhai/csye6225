@@ -28,6 +28,7 @@ public class Response<T> implements Serializable {
     private static final String NO_CONTENT_MESSAGE = "No Content";
     private static final String BAD_REQUEST_MESSAGE = "Bad Request";
     private static final String FORBIDDEN_MESSAGE = "Forbidden";
+    private static final String NOT_FOUND_MESSAGE = "Not Found";
     private static final String METHOD_NOT_ALLOWED_MESSAGE = "Method Not Allowed";
     private static final String SERVICE_UNAVAILABLE_MESSAGE = "Service Unavailable";
     private static final String UNAUTHORIZED_MESSAGE = "Unauthorized";
@@ -104,6 +105,18 @@ public class Response<T> implements Serializable {
         Response<T> response = new Response<>();
         response.setCode(ResponseCode.Forbidden.getCode());
         response.setMessage(FORBIDDEN_MESSAGE+ ": " + message);
+        return response;
+    }
+
+    /**
+     * not found response 404
+     * @return response
+     *
+     */
+    public static <T> Response<T> notFound(String message) {
+        Response<T> response = new Response<>();
+        response.setCode(ResponseCode.NOT_FOUND.getCode());
+        response.setMessage(NOT_FOUND_MESSAGE + ": " + message);
         return response;
     }
 
