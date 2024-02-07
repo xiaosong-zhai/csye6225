@@ -52,9 +52,6 @@ source "amazon-ebs" "my-ami" {
   region          = "${var.aws_region}"
   ami_name        = "csye6225_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   ami_description = "AMI for CSYE 6225"
-  ami_regions = [
-    "us-west-1",
-  ]
 
   ami_users = [
     "${var.demo_account_id}",
@@ -134,6 +131,10 @@ build {
   }
 
   post-processor "shell-local" {
-    inline = ["ami_id=$(jq -r '.builds[-1].artifact_id' manifest.json | cut -d':' -f2)", "echo $ami_id > output-ami-id.txt"]
+    inline = [
+      "ami_id=$(jq -r '.builds[-1].artifact_id' manifest.json | cut -d':' -f2 | cut -d',' -f1)",
+      "echo $ami_id > output-ami-id.txt"
+    ]
   }
+
 }

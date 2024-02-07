@@ -12,12 +12,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v4
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -35,6 +35,10 @@ jobs:
         with:
           version: 'latest'
 
+      - name: install jq
+        run: |
+          sudo apt-get install jq
+
       - name: Packer Init
         run: |
           cd ./packer
@@ -42,6 +46,8 @@ jobs:
 
       - name: Build AMI
         env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ vars.AWS_REGION }}
           DEMO_ACCOUNT_ID: ${{ vars.DEMO_ACCOUNT_ID }}
           INSTANCE_TYPE: ${{ vars.INSTANCE_TYPE }}
@@ -63,9 +69,17 @@ jobs:
             -var "volume_type=${{ env.VOLUME_TYPE }}" \
             ami.us-west-2.pkr.hcl
 
-      - name: install jq
+      - name: List files in current directory
         run: |
-          sudo apt-get install jq
+          ls -al
+
+      - name: move output-ami-id.txt to root
+        run: |
+          mv ./packer/output-ami-id.txt ./output-ami-id.txt
+
+      - name: Check AMI ID
+        run: |
+          cat output-ami-id.txt
 
       - name: Configure AWS CLI
         run: |
@@ -99,7 +113,7 @@ jobs:
           aws configure set default.output_format json
           completed="false"
           while [ "$completed" != "true" ]; do
-            status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name ${{ vars.ASG_NAME }} --query 'InstanceRefreshes[0].Status' --output text)
+            status=$(aws autoscaling describe-instance-refreshes --auto-scaling-group-name ${{ vars.AUTO_SCALING_GROUP_NAME }} --query 'InstanceRefreshes[0].Status' --output text)
             if [ "$status" == "Successful" ]; then
               completed="true"
             elif [ "$status" == "Failed" ]; then
@@ -108,5 +122,4 @@ jobs:
             fi
             sleep 20
           done
-            
 
